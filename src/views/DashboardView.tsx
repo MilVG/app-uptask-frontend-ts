@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { getProjects } from "@/api/ProjectAPI"
+import DetailsProject from "@/components/projects/DetailsProject"
 export default function DashboardView() {
 
   const { data, isError, isLoading } = useQuery({
@@ -26,7 +27,12 @@ export default function DashboardView() {
       </nav>
 
       {data.length ? (
-        <p>Si hay proyectos</p>
+        data.map(project => (
+          <DetailsProject
+            key={project._id}
+            project={project}
+          />
+        ))
       ) : (
         <>
           <p className="text-center py-20">No hay proyectos aún {''}</p>
