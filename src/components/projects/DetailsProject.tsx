@@ -41,20 +41,20 @@ export default function DetailsProject({ project }: DetailsProjectProps) {
                 >
                   <MenuItem>
                     <Link to={``}
-                      className='block px-3 py-1 text-sm leading-6 text-gray-900'>
+                      className='block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-purple-300'>
                       Ver Proyecto
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to={``}
-                      className='block px-3 py-1 text-sm leading-6 text-gray-900'>
+                    <Link to={`/projects/${project._id}/edit`}
+                      className='block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-purple-300'>
                       Editar Proyecto
                     </Link>
                   </MenuItem>
                   <MenuItem>
                     <button
                       type='button'
-                      className='block px-3 py-1 text-sm leading-6 text-red-500'
+                      className='block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-red-300'
                       onClick={() => { }}
                     >
                       Eliminar Proyecto
