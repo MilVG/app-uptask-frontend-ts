@@ -4,7 +4,7 @@ import { getProjects } from "@/api/ProjectAPI"
 import DetailsProject from "@/components/projects/DetailsProject"
 export default function DashboardView() {
 
-  const { data, isError, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: getProjects
   })

@@ -3,11 +3,29 @@ import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/r
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import { Project } from '@/types/index'
 import { Link } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+import { deleteProject } from '@/api/ProjectAPI'
 
 type DetailsProjectProps = {
   project: Project
 }
 export default function DetailsProject({ project }: DetailsProjectProps) {
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: deleteProject,
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      toast.success(data.msg)
+      queryClient.invalidateQueries({
+        queryKey: ['projects']
+      })
+    }
+  })
+
   return (
 
     <>
@@ -55,7 +73,7 @@ export default function DetailsProject({ project }: DetailsProjectProps) {
                     <button
                       type='button'
                       className='block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-red-300'
-                      onClick={() => { }}
+                      onClick={() => mutate(project._id)}
                     >
                       Eliminar Proyecto
                     </button>
