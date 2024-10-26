@@ -29,7 +29,7 @@ export async function getProjects() {
     }
   }
 }
-export async function editProject(id: Project['_id']) {
+export async function getProjectById(id: Project['_id']) {
 
   try {
     const { data } = await api.get(`/projects/${id}`)
