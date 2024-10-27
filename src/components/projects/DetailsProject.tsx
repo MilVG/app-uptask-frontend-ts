@@ -3,11 +3,29 @@ import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/r
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import { Project } from '@/types/index'
 import { Link } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+import { deleteProject } from '@/api/ProjectAPI'
 
 type DetailsProjectProps = {
   project: Project
 }
 export default function DetailsProject({ project }: DetailsProjectProps) {
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: deleteProject,
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      toast.success(data.msg)
+      queryClient.invalidateQueries({
+        queryKey: ['projects']
+      })
+    }
+  })
+
   return (
 
     <>
@@ -15,7 +33,7 @@ export default function DetailsProject({ project }: DetailsProjectProps) {
         <li key={project._id} className="flex justify-between gap-x-6 px-5 py-10">
           <div className="flex min-w-0 gap-x-4">
             <div className="min-w-0 flex-auto space-y-2">
-              <Link to={``}
+              <Link to={`/projects/${project._id}`}
                 className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
               >{project.projectName}</Link>
               <p className="text-sm text-gray-400">
@@ -40,22 +58,22 @@ export default function DetailsProject({ project }: DetailsProjectProps) {
                   className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
                 >
                   <MenuItem>
-                    <Link to={``}
-                      className='block px-3 py-1 text-sm leading-6 text-gray-900'>
+                    <Link to={`/projects/${project._id}`}
+                      className='block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-purple-300'>
                       Ver Proyecto
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to={``}
-                      className='block px-3 py-1 text-sm leading-6 text-gray-900'>
+                    <Link to={`/projects/${project._id}/edit`}
+                      className='block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-purple-300'>
                       Editar Proyecto
                     </Link>
                   </MenuItem>
                   <MenuItem>
                     <button
                       type='button'
-                      className='block px-3 py-1 text-sm leading-6 text-red-500'
-                      onClick={() => { }}
+                      className='block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-red-300'
+                      onClick={() => mutate(project._id)}
                     >
                       Eliminar Proyecto
                     </button>
