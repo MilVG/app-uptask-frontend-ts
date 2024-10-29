@@ -25,12 +25,12 @@ export async function createTask({ formData, projectId }: Pick<TaskAPI, 'formDat
 export async function getTaskById({ projectId, taskId }: Pick<TaskAPI, 'projectId' | 'taskId'>) {
   try {
     const url = `/projects/${projectId}/tasks/${taskId}`
-    const { data } = await api(url)
+    const { data } = await api.get(url)
     return data
   } catch (error) {
 
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.error)
+      throw new Error('Error keys not Accepted ')
     }
   }
 }
@@ -40,9 +40,10 @@ export async function updateTask({ projectId, taskId, formData }: Pick<TaskAPI, 
     const { data } = await api.put(url, formData)
     return data
   } catch (error) {
-
+    
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error)
+      
     }
   }
 }
