@@ -4,6 +4,8 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getTaskById } from '@/api/taskAPI';
 import { toast } from 'react-toastify';
+import { formatDate } from '@/utils/utils';
+import { statusTraslations } from '@/locales/es';
 
 export default function TaskModalDetails() {
 
@@ -16,28 +18,28 @@ export default function TaskModalDetails() {
 
   const show = taskId ? true : false
 
-  const { data, isError,error } = useQuery({
+  const { data, isError, error } = useQuery({
     queryKey: ['task', taskId],
     queryFn: () => getTaskById({ projectId, taskId }),
     enabled: !!taskId,
-    retry:false
+    retry: false
   })
 
-  const [redirect,setRedirect] = useState(false)
-   
-  useEffect(()=> {
+  const [redirect, setRedirect] = useState(false)
 
-    if(isError){
-      toast.error(error.message,{toastId:'error'})
+  useEffect(() => {
+
+    if (isError) {
+      toast.error(error.message, { toastId: 'error' })
       setRedirect(true)
     }
-  },[isError,error])
+  }, [isError, error])
 
-  if(redirect){
+  if (redirect) {
 
-    return <Navigate to={`/projects/${projectId}`}/>
+    return <Navigate to={`/projects/${projectId}`} />
   }
-  return (
+  if (data) return (
     <>
       <Transition appear show={show} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={() => navigate(location.pathname, { replace: true })}>
@@ -65,16 +67,23 @@ export default function TaskModalDetails() {
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all p-16">
-                  <p className='text-sm text-slate-400'>Agregada el: </p>
-                  <p className='text-sm text-slate-400'>Última actualización: </p>
+                  <p className='text-sm text-slate-400'>Agregada el: {formatDate(data.createdAt)}</p>
+                  <p className='text-sm text-slate-400'>Última actualización:{formatDate(data.updatedAt)} </p>
                   <DialogTitle
                     as="h3"
                     className="font-black text-4xl text-slate-600 my-5"
-                  >Titulo aquí
-                  </DialogTitle>
-                  <p className='text-lg text-slate-500 mb-2'>Descripción:</p>
+                  >{data.name}</DialogTitle>
+                  <p className='text-lg text-slate-500 mb-2'>Descripción: {data.description}</p>
                   <div className='my-5 space-y-3'>
-                    <label className='font-bold'>Estado Actual:</label>
+                    <label className='font-bold'>Estado Actual: </label>
+                    <select
+                      className='w-full p-3 bg-white border border-gray-300'
+                      defaultValue={data.status}
+                    >
+                      {Object.entries(statusTraslations).map(([key, value]) => (
+                        <option key={key} value={key}>{value}</option>
+                      ))}
+                    </select>
                   </div>
                 </DialogPanel>
               </TransitionChild>
