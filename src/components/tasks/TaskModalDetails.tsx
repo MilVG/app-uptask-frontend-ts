@@ -1,11 +1,12 @@
-import { Fragment, useEffect, useState } from 'react';
+import { ChangeEvent, Fragment, useEffect, useState } from 'react';
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query'
-import { getTaskById } from '@/api/taskAPI';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getTaskById, updateStatus } from '@/api/taskAPI';
 import { toast } from 'react-toastify';
 import { formatDate } from '@/utils/utils';
 import { statusTraslations } from '@/locales/es';
+import { TaskStatus } from '@/types/index';
 
 export default function TaskModalDetails() {
 
@@ -25,13 +26,36 @@ export default function TaskModalDetails() {
     retry: false
   })
 
+  //Mutacion de los datos queryFn
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: updateStatus,
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] })
+      toast.success(data.msg)
+    }
+  })
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const status = e.target.value as TaskStatus
+    const data = { projectId, taskId, status }
+    mutate(data)
+
+  }
+  //revisar si hay errores
   const [redirect, setRedirect] = useState(false)
 
   useEffect(() => {
 
     if (isError) {
       toast.error(error.message, { toastId: 'error' })
-      setRedirect(true)
+      setTimeout(() => {
+
+        setRedirect(true)
+      }, 3000)
     }
   }, [isError, error])
 
@@ -39,6 +63,7 @@ export default function TaskModalDetails() {
 
     return <Navigate to={`/projects/${projectId}`} />
   }
+
   if (data) return (
     <>
       <Transition appear show={show} as={Fragment}>
@@ -79,6 +104,7 @@ export default function TaskModalDetails() {
                     <select
                       className='w-full p-3 bg-white border border-gray-300'
                       defaultValue={data.status}
+                      onChange={handleChange}
                     >
                       {Object.entries(statusTraslations).map(([key, value]) => (
                         <option key={key} value={key}>{value}</option>
