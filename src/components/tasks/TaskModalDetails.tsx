@@ -34,8 +34,10 @@ export default function TaskModalDetails() {
       toast.error(error.message)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['project', projectId] })
       toast.success(data.msg)
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] })
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+
     }
   })
 
@@ -46,23 +48,13 @@ export default function TaskModalDetails() {
 
   }
   //revisar si hay errores
-  const [redirect, setRedirect] = useState(false)
-
   useEffect(() => {
-
     if (isError) {
       toast.error(error.message, { toastId: 'error' })
-      setTimeout(() => {
-
-        setRedirect(true)
-      }, 3000)
+      navigate(`/projects/${projectId}`)
     }
   }, [isError, error])
 
-  if (redirect) {
-
-    return <Navigate to={`/projects/${projectId}`} />
-  }
 
   if (data) return (
     <>
