@@ -28,7 +28,7 @@ export default function EditProjectForm({ data, projectId }: DataProjectProps) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['projects']
+        queryKey: ['project']
       })
       queryClient.invalidateQueries({
         queryKey: ['editProject', projectId]
