@@ -25,6 +25,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['project', projectId] })
       toast.success(data.msg)
+      navigate(location.pathname, { replace: true })
     }
   })
   return (
