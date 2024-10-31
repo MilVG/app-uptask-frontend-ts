@@ -21,7 +21,7 @@ export default function DetailsProject({ project }: DetailsProjectProps) {
     onSuccess: (data) => {
       toast.success(data.msg)
       queryClient.invalidateQueries({
-        queryKey: ['projects']
+        queryKey: ['project']
       })
     }
   })
