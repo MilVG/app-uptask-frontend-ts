@@ -35,3 +35,14 @@ export async function requestConfirmationCode(formData: RequestConfirmationCodeF
     }
   }
 }
+export async function AuthenticateUser(formData: UserLoginForm) {
+  try {
+    const url = "/auth/login";
+    const { data } = await api.post(url, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
