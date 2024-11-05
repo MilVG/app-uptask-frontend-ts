@@ -19,8 +19,8 @@ export default function LoginView() {
     onError: (error) => {
       toast.error(error.message)
     },
-    onSuccess: (data) => {
-      toast.success(data.msg)
+    onSuccess: () => {
+      toast.success('Inicinado sesion')
     }
   })
   const handleLogin = (formData: UserLoginForm) => {
