@@ -1,14 +1,16 @@
 import { addUserToProject } from "@/api/TeamAPI"
 import { TeamMember } from "@/types/index"
 import { useMutation } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 
 type SearchResultProp = {
   user: TeamMember
+  reset: () => void
 }
-export default function SearchResult({ user }: SearchResultProp) {
+export default function SearchResult({ user, reset }: SearchResultProp) {
 
+  const navigate = useNavigate()
   const params = useParams()
   const projectId = params.projectId!
   const { mutate } = useMutation({
@@ -18,6 +20,8 @@ export default function SearchResult({ user }: SearchResultProp) {
     },
     onSuccess: (data) => {
       toast.success(data.msg)
+      reset()
+      navigate(location.pathname, { replace: true })
     }
   })
 
