@@ -1,33 +1,40 @@
-import { Link, useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form"
-import { useMutation } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
-import ProjectForm from "@/components/projects/ProjectForm"
-import { ProjectFormData } from "@/types/index"
-import { createProject } from "@/api/ProjectAPI"
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import ProjectForm from "@/components/projects/ProjectForm";
+import { ProjectFormData } from "@/types/index";
+import { createProject } from "@/api/ProjectAPI";
 
 export default function CreateProjectView() {
 
   const navigate = useNavigate()
-
   const initialValues: ProjectFormData = {
     projectName: "",
     clientName: "",
-    description: ""
-  }
-  const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
+    description: "",
+  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ defaultValues: initialValues });
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: createProject,
     onError: (error) => {
-      toast.error(error.message)
+      toast.error(error.message);
     },
     onSuccess: (data) => {
-      toast.success(data.msg)
+      toast.success(data.msg);
+      queryClient.invalidateQueries({ queryKey: ['projects'] })
+      reset()
       navigate('/')
-    }
-  })
-  const handleForm = (formData: ProjectFormData) => mutate(formData)
+    },
+  });
+  const handleForm = (formData: ProjectFormData) => mutate(formData);
 
   return (
     <>
@@ -41,8 +48,10 @@ export default function CreateProjectView() {
           <Link
             className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl
           font-bold cursor-pointer transition-colors"
-            to='/'
-          >Volver a Projectos</Link>
+            to="/"
+          >
+            Volver a Projectos
+          </Link>
         </nav>
 
         <form
@@ -50,10 +59,7 @@ export default function CreateProjectView() {
           onSubmit={handleSubmit(handleForm)}
           noValidate
         >
-          <ProjectForm
-            register={register}
-            errors={errors}
-          />
+          <ProjectForm register={register} errors={errors} />
 
           <input
             type="submit"
@@ -63,6 +69,5 @@ export default function CreateProjectView() {
         </form>
       </div>
     </>
-  )
+  );
 }
-
