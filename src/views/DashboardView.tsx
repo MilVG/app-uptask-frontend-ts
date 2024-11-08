@@ -2,16 +2,18 @@ import { Link } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { getProjects } from "@/api/ProjectAPI"
 import DetailsProject from "@/components/projects/DetailsProject"
+import { useAuth } from '@/hooks/useAuth'
+
 export default function DashboardView() {
 
+  const { data: user, isLoading: authLoading } = useAuth()
   const { data, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: getProjects
   })
+  if (isLoading && authLoading) return 'cargando...'
 
-  if (isLoading) return 'cargando...'
-
-  if (data) return (
+  if (data && user) return (
     <>
       <h1 className="text-5xl font-black">Mis proyectos</h1>
       <p className="text-2xl font-light text-gray-500 mt-5">
@@ -31,6 +33,7 @@ export default function DashboardView() {
           <DetailsProject
             key={project._id}
             project={project}
+            user={user}
           />
         ))
       ) : (
