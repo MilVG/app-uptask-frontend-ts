@@ -11,8 +11,6 @@ export default function DashboardView() {
     queryKey: ['projects'],
     queryFn: getProjects
   })
-  console.log(data)
-
   if (isLoading && authLoading) return 'cargando...'
 
   if (data && user) return (
