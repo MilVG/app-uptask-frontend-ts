@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { Project } from '@/types/index'
+import { Project, User } from '@/types/index'
 import { Link } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
@@ -9,8 +9,9 @@ import { deleteProject } from '@/api/ProjectAPI'
 
 type DetailsProjectProps = {
   project: Project
+  user: User
 }
-export default function DetailsProject({ project }: DetailsProjectProps) {
+export default function DetailsProject({ project, user }: DetailsProjectProps) {
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
@@ -63,21 +64,26 @@ export default function DetailsProject({ project }: DetailsProjectProps) {
                       Ver Proyecto
                     </Link>
                   </MenuItem>
-                  <MenuItem>
-                    <Link to={`/projects/${project._id}/edit`}
-                      className='block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-purple-300'>
-                      Editar Proyecto
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <button
-                      type='button'
-                      className='block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-red-300'
-                      onClick={() => mutate(project._id)}
-                    >
-                      Eliminar Proyecto
-                    </button>
-                  </MenuItem>
+
+                  {project.manager === user._id && (
+                    <>
+                      <MenuItem>
+                        <Link to={`/projects/${project._id}/edit`}
+                          className='block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-purple-300'>
+                          Editar Proyecto
+                        </Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <button
+                          type='button'
+                          className='block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-red-300'
+                          onClick={() => mutate(project._id)}
+                        >
+                          Eliminar Proyecto
+                        </button>
+                      </MenuItem>
+                    </>
+                  )}
                 </MenuItems>
               </Transition>
             </Menu>
