@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { deleteProject } from '@/api/ProjectAPI'
+import { isManager } from '@/utils/policies'
 
 type DetailsProjectProps = {
   project: Project
@@ -35,7 +36,7 @@ export default function DetailsProject({ project, user }: DetailsProjectProps) {
           <div className="flex min-w-0 gap-x-4">
             <div className="min-w-0 flex-auto space-y-2">
               <div className="mb-2">
-                {project.manager === user._id ?
+                {isManager(project.manager, user._id) ?
                   <p className="font-bold text-xs uppercase bg-indigo-50 text-indigo-500 border-2
                     border-indigo-500 rounded-lg inline-block py-1 px-5">Manager</p> :
                   <p className="font-bold text-xs uppercase bg-green-50 text-green-500 border-2
@@ -73,7 +74,7 @@ export default function DetailsProject({ project, user }: DetailsProjectProps) {
                     </Link>
                   </MenuItem>
 
-                  {project.manager === user._id && (
+                  {isManager(project.manager, user._id) && (
                     <>
                       <MenuItem>
                         <Link to={`/projects/${project._id}/edit`}
