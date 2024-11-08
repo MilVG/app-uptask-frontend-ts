@@ -1,6 +1,6 @@
-import { ChangeEvent, Fragment, useEffect, useState } from 'react';
+import { ChangeEvent, Fragment, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getTaskById, updateStatus } from '@/api/taskAPI';
 import { toast } from 'react-toastify';
@@ -91,6 +91,14 @@ export default function TaskModalDetails() {
                     className="font-black text-4xl text-slate-600 my-5"
                   >{data.name}</DialogTitle>
                   <p className='text-lg text-slate-500 mb-2'>Descripción: {data.description}</p>
+
+                  {data.completedBy && (
+                    <p>
+                      <span className="font-bold text-slate-600">Estado actualizado por:</span>
+                      {' '}
+                      {data.completedBy.name}
+                    </p>
+                  )}
                   <div className='my-5 space-y-3'>
                     <label className='font-bold'>Estado Actual: </label>
                     <select
