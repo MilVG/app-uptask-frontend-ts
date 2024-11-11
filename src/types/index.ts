@@ -113,7 +113,17 @@ export const editProjectSchema = projectSchema.pick({
   clientName: true,
   description: true
 })
+
+export const dashboardProjectschemaObj = projectSchema.pick({
+  _id: true,
+  projectName: true,
+  clientName: true,
+  description: true,
+  manager: true
+
+})
 export type Project = z.infer<typeof projectSchema>;
+export type ProjectDashbord = z.infer<typeof dashboardProjectschemaObj>;
 export type ProjectFormData = Pick<
   Project,
   "clientName" | "projectName" | "description"
