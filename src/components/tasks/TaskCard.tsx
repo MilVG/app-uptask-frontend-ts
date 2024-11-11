@@ -1,4 +1,4 @@
-import { Task } from "@/types/index"
+import { TaskProject } from "@/types/index"
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { Fragment } from "react/jsx-runtime";
@@ -8,7 +8,7 @@ import { deleteTask } from "@/api/taskAPI";
 import { toast } from "react-toastify";
 import { useDraggable } from "@dnd-kit/core";
 type TaskCardProps = {
-  task: Task
+  task: TaskProject
   canEdit: boolean
 }
 export default function TaskCard({ task, canEdit }: TaskCardProps) {
