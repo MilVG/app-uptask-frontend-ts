@@ -1,13 +1,13 @@
 import { Fragment } from 'react'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { Project, User } from '@/types/index'
+import { ProjectDashbord, User } from '@/types/index'
 import { Link, useNavigate } from 'react-router-dom'
 import { isManager } from '@/utils/policies'
 import DeleteProjectModal from './deleteProjectModal'
 
 type DetailsProjectProps = {
-  project: Project
+  project: ProjectDashbord
   user: User
 }
 export default function DetailsProject({ project, user }: DetailsProjectProps) {
