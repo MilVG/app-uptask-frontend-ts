@@ -79,7 +79,7 @@ export async function deleteProject(id: Project['_id']) {
 export async function getFullProject(id: Project['_id']) {
 
   try {
-    const { data } = await api.delete(`/projects/${id}`)
+    const { data } = await api.get(`/projects/${id}`)
     const response = projectSchema.safeParse(data)
 
     if (response.success) {
