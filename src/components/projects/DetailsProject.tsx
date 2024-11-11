@@ -2,11 +2,9 @@ import { Fragment } from 'react'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import { Project, User } from '@/types/index'
-import { Link } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
-import { deleteProject } from '@/api/ProjectAPI'
+import { Link, useNavigate } from 'react-router-dom'
 import { isManager } from '@/utils/policies'
+import DeleteProjectModal from './deleteProjectModal'
 
 type DetailsProjectProps = {
   project: Project
@@ -14,19 +12,7 @@ type DetailsProjectProps = {
 }
 export default function DetailsProject({ project, user }: DetailsProjectProps) {
 
-  const queryClient = useQueryClient()
-  const { mutate } = useMutation({
-    mutationFn: deleteProject,
-    onError: (error) => {
-      toast.error(error.message)
-    },
-    onSuccess: (data) => {
-      toast.success(data.msg)
-      queryClient.invalidateQueries({
-        queryKey: ['projects']
-      })
-    }
-  })
+  const navigate = useNavigate()
 
   return (
 
@@ -86,7 +72,7 @@ export default function DetailsProject({ project, user }: DetailsProjectProps) {
                         <button
                           type='button'
                           className='block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-red-300'
-                          onClick={() => mutate(project._id)}
+                          onClick={() => navigate(location.pathname + `?deleteProject=${project._id}`)}
                         >
                           Eliminar Proyecto
                         </button>
@@ -99,6 +85,8 @@ export default function DetailsProject({ project, user }: DetailsProjectProps) {
           </div>
         </li>
       </ul>
+
+      <DeleteProjectModal />
     </>
   )
 }
